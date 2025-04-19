@@ -1,0 +1,3 @@
+pandas>=1.3.0
+shinybroker>=0.2.1
+PyPortfolioOpt>=1.5.2
