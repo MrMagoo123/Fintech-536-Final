@@ -1,9 +1,3 @@
-#run pip install -r requirements.txt
-#pip install shinybroker
-#pip install PyPortfolioOpt
-
-
-
 import pandas as pd
 import shinybroker as sb
 import time
@@ -15,7 +9,7 @@ from pypfopt import expected_returns
 list_of_tickers = ["AAPL", "TSLA", "MSTR", "GME", "AMZN", "USO", "SHY", "IVV"]
 
 def fetch_close_for_a_ticker(ticker):
-    df = sb.fetch_historical_data(
+    df = sb.fetch_historical_data(          #this is the part that is connecting to the IB API
         contract=sb.Contract({
             'symbol': ticker,
             'secType': "STK",
