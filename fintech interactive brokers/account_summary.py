@@ -1,9 +1,7 @@
 from ibapi.client import EClient
 from ibapi.wrapper import EWrapper
 from ibapi.contract import Contract
-from ibapi.order import Order
 import threading
-import time
 
 
 # ------------ Net Liquidation ------------
@@ -90,77 +88,14 @@ def get_positions():
     return app.positions
 
 
-# ------------ Rebalancing Logic ------------
+# Main Logic
+if __name__ == "__main__":
+    # Fetch Account Value (Net Liquidation)
+    net_liquidation = get_account_value()
+    print(f"\n[INFO] Net Liquidation Value: ${net_liquidation:.2f}")
 
-class TraderApp(EWrapper, EClient):
-    def __init__(self):
-        EClient.__init__(self, self)
-        self.nextOrderId = None
-        self.connected_event = threading.Event()
-
-    def nextValidId(self, orderId: int):
-        self.nextOrderId = orderId
-        print(f"[DEBUG] Next valid order ID: {orderId}")
-        self.connected_event.set()
-
-
-def create_contract(symbol):
-    contract = Contract()
-    contract.symbol = symbol
-    contract.secType = "STK"
-    contract.exchange = "SMART"
-    contract.currency = "USD"
-    return contract
-
-
-def create_order(action, quantity):
-    order = Order()
-    order.action = action
-    order.orderType = "MKT"
-    order.totalQuantity = quantity
-    return order
-
-
-def rebalance_portfolio(target_allocations, current_prices):
-    capital = get_account_value()
-    positions = dict((symbol, qty) for symbol, qty, _ in get_positions())
-    print(f"\n[INFO] Current capital: ${capital:.2f}")
-    print(f"[INFO] Current positions: {positions}")
-
-    target_shares = {}
-    for symbol, weight in target_allocations.items():
-        price = current_prices.get(symbol, 0)
-        if price > 0:
-            target_qty = int((capital * weight) / price)
-            target_shares[symbol] = target_qty
-
-    app = TraderApp()
-    app.connect("127.0.0.1", 7497, clientId=999)
-
-    thread = threading.Thread(target=app.run, daemon=True)
-    thread.start()
-
-    app.connected_event.wait(timeout=5)
-    order_id = app.nextOrderId or 1
-
-    for symbol, target_qty in target_shares.items():
-        current_qty = positions.get(symbol, 0)
-        delta = target_qty - current_qty
-
-        if delta == 0:
-            print(f"[INFO] No change needed for {symbol}")
-            continue
-
-        action = "BUY" if delta > 0 else "SELL"
-        quantity = abs(delta)
-        print(f"[TRADE] {action} {quantity} shares of {symbol}")
-
-        contract = create_contract(symbol)
-        order = create_order(action, quantity)
-        app.placeOrder(order_id, contract, order)
-        order_id += 1
-        time.sleep(1)
-
-    time.sleep(2)
-    app.disconnect()
-    thread.join(timeout=2)
+    # Fetch Positions
+    positions = get_positions()
+    print("\n✅ Final Positions:")
+    for symbol, qty, cost in positions:
+        print(f" - {symbol}: {qty} shares @ avg cost ${cost:.2f}")
