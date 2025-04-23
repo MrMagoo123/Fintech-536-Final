@@ -15,6 +15,7 @@ def optimize_portfolio(historical_data):
 def get_target_allocations():
     hist_data = fetch_historical_data(TICKERS)
     weights = optimize_portfolio(hist_data)
+    print('these are the weights: ', weights)
     return weights  # Returns dict like {"AAPL": 0.18, "TSLA": 0.12, ...}
 
 def get_latest_prices(tickers=None):
