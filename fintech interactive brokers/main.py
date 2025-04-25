@@ -1,7 +1,7 @@
 from data_fetcher import fetch_historical_data, optimize_portfolio, fetch_latest_prices
 from trader import rebalance_portfolio, get_account_value
 
-TICKERS = ["AAPL", "TSLA", "MSTR", "GME", "AMZN", "USO", "SHY", "IVV"]
+TICKERS = ["AAPL", "TSLA", "MSTR", "GME", "AMZN", "USO", "SHY", "IVV", "QQQ", "VOO", "IBKR", "MSFT", "NVDA", "SPY", "META"]
 
 
 def main():
