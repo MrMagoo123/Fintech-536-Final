@@ -4,6 +4,7 @@ import shinybroker as sb
 from pypfopt.efficient_frontier import EfficientFrontier
 from pypfopt import expected_returns, risk_models
 
+
 def fetch_close_for_a_ticker(ticker):
     df = sb.fetch_historical_data(
         contract=sb.Contract({
@@ -34,9 +35,21 @@ def fetch_latest_prices(tickers):
         prices[tk] = df[tk].iloc[-1]
     return prices
 
-def optimize_portfolio(historical_data):
-    mu = expected_returns.mean_historical_return(historical_data)
+def optimize_portfolio(historical_data):            #this does factor investing based on momentum (normalized from 0 to 1)
+    # Calculate 6-month momentum
+    momentum = historical_data.pct_change(126).iloc[-1]
+
+    # Scale momentum scores between 0 and 1
+    min_mom = momentum.min()
+    max_mom = momentum.max()
+    scaled_momentum = (momentum - min_mom) / (max_mom - min_mom)
+
+    # Set scaled momentum as "expected returns"
+    mu = scaled_momentum
+
+    # Use sample covariance matrix
     S = risk_models.sample_cov(historical_data)
+
     ef = EfficientFrontier(mu, S)
     weights = ef.max_sharpe()
     return ef.clean_weights()

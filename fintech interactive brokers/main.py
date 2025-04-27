@@ -5,6 +5,8 @@ TICKERS = ["AAPL", "TSLA", "MSTR", "GME", "AMZN", "USO", "SHY", "IVV", "QQQ", "V
 
 
 def main():
+    print(yf.__version__)
+
     print("🔍 Fetching historical data...")
     historical_data = fetch_historical_data(TICKERS)
 
