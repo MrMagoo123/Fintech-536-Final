@@ -62,6 +62,9 @@ SECTOR_ETFS = [
     "XLI",  # Industrials
     "XLB",  # Materials
     "XLU",  # Utilities
+    "XME",  # Metals and Mining
+    "XOP",  # Oil & Gas Exploration
+    "XRT"  # Retail
 ]
 
 # Broad Market Index ETFs (Large-cap, mid-cap, small-cap U.S. markets)
