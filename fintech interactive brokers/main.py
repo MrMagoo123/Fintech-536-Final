@@ -1,17 +1,17 @@
-from data_fetcher import fetch_historical_data, optimize_portfolio, fetch_latest_prices
+from data_fetcher import fetch_historical_data, optimize_portfolio, fetch_latest_prices, fetch_fundamentals_yf
 from trader import rebalance_portfolio, get_account_value
 
 TICKERS = ["AAPL", "TSLA", "MSTR", "GME", "AMZN", "USO", "SHY", "IVV", "QQQ", "VOO", "IBKR", "MSFT", "NVDA", "SPY", "META"]
 
-
 def main():
-    # print(yf.__version__)
-
     print("🔍 Fetching historical data...")
     historical_data = fetch_historical_data(TICKERS)
 
+    print("🧠 Fetching fundamental data (PE ratio, market cap)...")
+    fundamentals = {ticker: fetch_fundamentals_yf(ticker) for ticker in TICKERS}
+
     print("🧠 Optimizing portfolio...")
-    weights = optimize_portfolio(historical_data)
+    weights = optimize_portfolio(historical_data, fundamentals)  # Pass fundamentals here
 
     print("💰 Fetching account value...")
     capital = get_account_value()
@@ -33,7 +33,6 @@ def main():
     estimated_cost = sum((capital * weight) for symbol, weight in allocations.items())
     cash_remaining = capital - estimated_cost
     print(f"💸 Estimated cash remaining after allocation: ${cash_remaining:.2f}")
-
 
     print("🔁 Rebalancing portfolio...")
     rebalance_portfolio(allocations, latest_prices)
