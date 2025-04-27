@@ -1,7 +1,19 @@
 from data_fetcher import fetch_historical_data, optimize_portfolio, fetch_latest_prices, fetch_fundamentals_yf
 from trader import rebalance_portfolio, get_account_value
 
-TICKERS = ["AAPL", "TSLA", "MSTR", "GME", "AMZN", "USO", "SHY", "IVV", "QQQ", "VOO", "IBKR", "MSFT", "NVDA", "SPY", "META"]
+TICKERS = ["AAPL", "TSLA", "MSTR", "GME", "AMZN", "USO", "SHY", "IVV", "QQQ", "IBKR", "MSFT", "NVDA", "SPY", "META", "UNH", "V", "JPM", "RBLX", "DKNG", "CELH",  "SOFI", "HOOD", "MSTR", "ABNB", "SOFI",
+# 🏛️ Sector ETFs (SPDR Sector Funds - equity sectors)
+    "XLF",  # Financials
+    "XLK",  # Technology
+    "XLY",  # Consumer Discretionary
+    # "XLC",  # Communication Services
+    "XLE",  # Energy
+    "XLV",  # Health Care
+    "XLI",  # Industrials
+    "XLB",  # Materials
+    # "XLRE", # Real Estate
+    "XLU",  # Utilities]
+    "SPY", "QQQ", "IVV", "VTI", "IWM", "DIA"] 
 
 def main():
     print("🔍 Fetching historical data...")

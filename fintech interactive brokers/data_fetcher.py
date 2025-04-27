@@ -3,7 +3,7 @@ import time
 import shinybroker as sb
 import yfinance as yf
 from pypfopt.efficient_frontier import EfficientFrontier
-from pypfopt import expected_returns, risk_models
+from pypfopt import EfficientFrontier, risk_models, expected_returns, objective_functions
 
 
 # Function to fetch close price for a given ticker using shinybroker
@@ -47,31 +47,64 @@ def fetch_fundamentals_yf(ticker):
     """Fetch fundamental data for a given ticker using yfinance."""
     stock = yf.Ticker(ticker)
     info = stock.info
+    market_cap = info.get('marketCap', None)
+    pe_ratio = info.get('trailingPE', None)
+
+    if market_cap is None:
+        print(f"⚠️ Market Cap missing for {ticker}, skipping this stock.")
+        return None
     
     fundamentals = {
         'pe_ratio': info.get('trailingPE', None),
         'market_cap': info.get('marketCap', None),  # Market Cap as Size factor
     }
+
+    print('check for stock ', ticker, ' fundamentals: ', fundamentals)
     
     return fundamentals
 
+def categorize_stocks(fundamentals):
+    small_caps = []
+    large_caps = []
+    etfs = []
+
+    for ticker, data in fundamentals.items():
+        market_cap = data.get('market_cap', 0)
+        
+        # Classify ETFs based on tickers or sector
+        if ticker in ["SPY", "QQQ", "IVV", "VOO", "VTI", "IWM", "DIA", "XLF", "XLK", "XLY", "XLC", "XLE", "XLV", "XLI", "XLB", "XLRE", "XLU"]:
+            etfs.append(ticker)
+        # Classify by market cap
+        elif market_cap < 2e9:  # Small Cap
+            small_caps.append(ticker)
+            print('small_cap detected: ', ticker)
+        elif market_cap > 10e9:  # Large Cap
+            large_caps.append(ticker)
+            print('large_cap detected: ', ticker)
+
+    
+    return small_caps, large_caps, etfs
 
 # Function to optimize the portfolio using momentum, size (market cap), and value (PE ratio)
 def optimize_portfolio(historical_data, fundamentals):
     # 1. Momentum Factor: 6-month price change
-    momentum = historical_data.pct_change(126).iloc[-1]
+    momentum = historical_data.pct_change(126).iloc[-1].dropna()
 
     # Scale momentum scores between 0 and 1
     min_mom = momentum.min()
     max_mom = momentum.max()
     scaled_momentum = (momentum - min_mom) / (max_mom - min_mom)
 
-    # 2. Size Factor: Market Cap (larger market cap = higher score)
+
+    # # 2. Size Factor: Market Cap (larger market cap = higher score)
     market_caps = {ticker: fundamentals[ticker].get('market_cap', None) for ticker in fundamentals}
     
-    # Remove tickers with None as market cap
+    # # Remove tickers with None as market cap
     market_caps = {ticker: cap for ticker, cap in market_caps.items() if cap is not None}
-    
+    # valid_tickers = [ticker for ticker in tickers if fundamentals.get(ticker)]
+
+    small_caps, large_caps, etfs = categorize_stocks(fundamentals)
+
     # Check if there are any valid market cap values to compute scaling
     if len(market_caps) > 0:
         min_size = min(market_caps.values())
@@ -98,10 +131,11 @@ def optimize_portfolio(historical_data, fundamentals):
     combined_returns = {}
     for ticker in momentum.index:
         combined_returns[ticker] = (
-            0.4 * scaled_momentum.get(ticker, 0) +  # 40% momentum
-            0.3 * scaled_size.get(ticker, 0) +      # 30% size (market cap)
-            0.3 * scaled_pe.get(ticker, 0)         # 30% value (PE ratio)
+            0.8 * scaled_momentum.get(ticker, 0) +  # 40% momentum
+            # 0.3 * scaled_size.get(ticker, 0) +      # 30% size (market cap)
+             0.2 * scaled_pe.get(ticker, 0.5)         # 30% value (PE ratio) NOTE: IF THERE IS NO PE SCORE, DONT PENALIZE, JUST ENSUREITS NEUTRAL
         )
+        print('expected returns stock score for ', ticker, ' ', combined_returns[ticker])
 
     # Convert combined_returns dictionary to a Pandas Series
     mu = pd.Series(combined_returns)
@@ -111,7 +145,15 @@ def optimize_portfolio(historical_data, fundamentals):
 
     # Optimize the portfolio using the Efficient Frontier with the combined expected returns and covariance matrix
     ef = EfficientFrontier(mu, S)
+    
+    ef.add_constraint(lambda w: w <= 0.20)
+    # ef.add_constraint(lambda w: sum(w[ticker] for ticker in small_caps) >= 0.10)  # 10% for Small Caps
+    # ef.add_constraint(lambda w: sum(w[ticker] for ticker in large_caps) >= 0.10)  # 10% for Large Caps
+    # ef.add_constraint(lambda w: sum(w[ticker] for ticker in etfs) >= 0.10)  # 10% for ETFs
+
+
     weights = ef.max_sharpe()  # Maximize Sharpe ratio for portfolio
+
     return ef.clean_weights()
 
 
