@@ -1,6 +1,6 @@
 from data_fetcher import fetch_historical_data, optimize_portfolio, fetch_latest_prices, fetch_fundamentals_yf
 from trader import rebalance_portfolio, get_account_value
-
+'''
 TICKERS = ["AAPL", "TSLA", "MSTR", "GME", "AMZN", "USO", "SHY", "IVV", "QQQ", "IBKR", "MSFT", "NVDA", "SPY", "META", "UNH", "V", "JPM", "RBLX", "DKNG", "CELH",  "SOFI", "HOOD", "MSTR", "ABNB", "SOFI",
 # 🏛️ Sector ETFs (SPDR Sector Funds - equity sectors)
     "XLF",  # Financials
@@ -14,6 +14,69 @@ TICKERS = ["AAPL", "TSLA", "MSTR", "GME", "AMZN", "USO", "SHY", "IVV", "QQQ", "I
     # "XLRE", # Real Estate
     "XLU",  # Utilities]
     "SPY", "QQQ", "IVV", "VTI", "IWM", "DIA"] 
+'''
+
+# Individual US Stocks
+STOCK_TICKERS = [
+    "AAPL",  # Apple
+    "TSLA",  # Tesla
+    "MSTR",  # MicroStrategy
+    "GME",   # GameStop
+    "AMZN",  # Amazon
+    "MSFT",  # Microsoft
+    "NVDA",  # NVIDIA
+    "META",  # Meta (Facebook)
+    "UNH",   # UnitedHealth
+    "V",     # Visa
+    "JPM",   # JPMorgan Chase
+    "IBKR",  # Interactive Brokers
+    "RBLX",  # Roblox
+    "DKNG",  # DraftKings
+    "CELH",  # Celsius Holdings
+    "SOFI",  # SoFi Technologies
+    "HOOD",  # Robinhood
+    "ABNB",  # Airbnb
+    "PEP",   # PepsiCo
+    "COST",  # Costco
+    "AMD",   # Advanced Micro Devices
+    "GOOG",  # Alphabet (Google Class C)
+    "MRK",   # Merck & Co.
+    "CSCO",  # Cisco Systems
+    "WMT",   # Walmart
+    "BA",    # Boeing
+    "C",     # Citigroup
+    "DIS",   # Disney
+    "CRM",   # Salesforce
+    "AMGN",  # Amgen
+    "LOW",   # Lowe’s
+    "GS"     # Goldman Sachs
+]
+
+# Sector ETFs (SPDR Sector ETFs covering major US equity sectors)
+SECTOR_ETFS = [
+    "XLF",  # Financials
+    "XLK",  # Technology
+    "XLY",  # Consumer Discretionary
+    "XLE",  # Energy
+    "XLV",  # Health Care
+    "XLI",  # Industrials
+    "XLB",  # Materials
+    "XLU",  # Utilities
+]
+
+# Broad Market Index ETFs (Large-cap, mid-cap, small-cap U.S. markets)
+MARKET_ETFS = [
+    "SPY",  # S&P 500
+    "QQQ",  # NASDAQ 100
+    "IVV",  # S&P 500 (alternative)
+    "VTI",  # Total U.S. Stock Market
+    "IWM",  # Russell 2000 (small caps)
+    "DIA"   # Dow Jones Industrial Average
+]
+
+# Combined Ticker List
+TICKERS = STOCK_TICKERS + SECTOR_ETFS + MARKET_ETFS
+
 
 def main():
     print("🔍 Fetching historical data...")
