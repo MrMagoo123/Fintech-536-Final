@@ -34,7 +34,27 @@ STOCK_TICKERS = [
     "CRM",   # Salesforce
     "AMGN",  # Amgen
     "LOW",   # Lowe’s
-    "GS"     # Goldman Sachs
+    "GS",    # Goldman Sachs
+    "WBA",   # Walgreens Boots Alliance
+    "PYPL",  # PayPal Holdings
+    "ADBE",  # Adobe Systems
+    "NKE",   # Nike
+    "ORCL",  # Oracle
+    "TXN",   # Texas Instruments
+    "PFE",   # Pfizer
+    "INTC",  # Intel Corporation
+    "BKNG",  # Booking Holdings
+    "GE",    # General Electric
+    "UPS",   # United Parcel Service
+    "T",     # AT&T
+    "VRTX",  # Vertex Pharmaceuticals
+    "MDT",   # Medtronic
+    "CVX",   # Chevron
+    "ABBV",  # AbbVie
+    "MCD",   # McDonald's
+    "BLK",   # BlackRock
+    "FDX",   # FedEx
+    "CAT"    # Caterpillar
 ]
 
 # Sector ETFs (SPDR Sector ETFs covering major US equity sectors)
