@@ -54,7 +54,73 @@ STOCK_TICKERS = [
     "MCD",   # McDonald's
     "BLK",   # BlackRock
     "FDX",   # FedEx
-    "CAT"    # Caterpillar
+    "CAT",   # Caterpillar
+    "ZM",    # Zoom Video Communications
+    "TEAM",  # Atlassian
+    "DDOG",  # Datadog
+    "SHOP",  # Shopify
+    "LYFT",  # Lyft
+    "UBER",  # Uber Technologies
+    "TWLO",  # Twilio
+    "DOCU",  # DocuSign
+    "RIVN",  # Rivian
+    "F",     # Ford Motor Company
+    "GM",    # General Motors
+    "XOM",   # ExxonMobil
+    "OXY",   # Occidental Petroleum
+    "PSX",   # Phillips 66
+    "APA",   # Apache Corp
+    "WBD",   # Warner Bros Discovery
+    "SBUX",  # Starbucks
+    "BK",    # Bank of New York Mellon
+    "MS",    # Morgan Stanley
+    "ETSY",  # Etsy
+    "PANW",  # Palo Alto Networks
+    "ZS",    # Zscaler
+    "ANET",  # Arista Networks
+    "LULU",  # Lululemon Athletica
+    "DE",    # Deere & Co.
+    "SPOT",  # Spotify
+    "CHTR",  # Charter Communications
+    "MAR",   # Marriott International
+    "HON",   # Honeywell
+    "NOW",   # ServiceNow
+    "ADP",   # Automatic Data Processing
+    "TMO",   # Thermo Fisher Scientific
+    "AVGO",  # Broadcom
+    "KLAC",  # KLA Corporation
+    "MPC",   # Marathon Petroleum
+    "DFS",   # Discover Financial Services
+    "MTCH",  # Match Group
+    "EBAY",  # eBay
+    "ALGN",  # Align Technology
+    "CRWD",  # CrowdStrike Holdings
+    "DD",    # DuPont
+    "GLW",   # Corning Inc.
+    "VRSK",  # Verisk Analytics
+    "ILMN",  # Illumina
+    "REGN",  # Regeneron Pharmaceuticals
+    "SWKS",  # Skyworks Solutions
+    "FTNT",  # Fortinet
+    "ROST",  # Ross Stores
+    "BBY",   # Best Buy
+    "AES",   # AES Corporation
+    "DRI",   # Darden Restaurants
+    "ULTA",  # Ulta Beauty
+    "IDXX",  # IDEXX Laboratories
+    "APPF",   # AppFolio
+    "INSM",   # Insmed
+    "FND",    # Floor & Decor Holdings
+    "RUN",    # Sunrun
+    "BL",     # BlackLine
+    "FOUR",   # Shift4 Payments
+    "ESTC",   # Elastic N.V.
+    "NEOG",   # Neogen Corp
+    "RGEN",   # Repligen Corporation
+    "VRT",    # Vertiv Holdings
+    "MGNI",   # Magnite
+    "LMND",   # Lemonade
+    "WOLF"    # Wolfspeed
 ]
 
 # Sector ETFs (SPDR Sector ETFs covering major US equity sectors)
