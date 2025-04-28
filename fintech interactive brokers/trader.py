@@ -118,7 +118,10 @@ def create_order(action, quantity):
     order.action = action
     order.orderType = "MKT"
     order.totalQuantity = quantity
+    order.eTradeOnly = False  # These two lines enable paper trading to occur
+    order.firmQuoteOnly = False  # This too!
     return order
+
 
 
 def rebalance_portfolio(target_allocations, current_prices):
