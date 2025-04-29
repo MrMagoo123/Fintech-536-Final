@@ -137,25 +137,19 @@ def optimize_portfolio(historical_data, fundamentals):
         )
         print('expected returns stock score for ', ticker, ' ', combined_returns[ticker])
 
-    # Convert combined_returns dictionary to a Pandas Series
-    mu = pd.Series(combined_returns)
+        mu = pd.Series(combined_returns)
 
-    # Use sample covariance matrix for risk estimation
+    # build covariance on *all* columns, then align it to mu
     S = risk_models.sample_cov(historical_data)
+    S = S.reindex(index=mu.index, columns=mu.index)
 
-    # Optimize the portfolio using the Efficient Frontier with the combined expected returns and covariance matrix
+    print("mu shape:", mu.shape)
+    print("S shape:", S.shape)
+
     ef = EfficientFrontier(mu, S)
-    
     ef.add_constraint(lambda w: w <= 0.20)
-    # ef.add_constraint(lambda w: sum(w[ticker] for ticker in small_caps) >= 0.10)  # 10% for Small Caps
-    # ef.add_constraint(lambda w: sum(w[ticker] for ticker in large_caps) >= 0.10)  # 10% for Large Caps
-    # ef.add_constraint(lambda w: sum(w[ticker] for ticker in etfs) >= 0.10)  # 10% for ETFs
-
-
-    weights = ef.max_sharpe()  # Maximize Sharpe ratio for portfolio
-
+    weights = ef.max_sharpe()
     return ef.clean_weights()
-
 
 
 
