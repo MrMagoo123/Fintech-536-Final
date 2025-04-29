@@ -147,7 +147,23 @@ def optimize_portfolio(historical_data, fundamentals):
     print("S shape:", S.shape)
 
     ef = EfficientFrontier(mu, S)
+
+    # ➔ No individual asset should have more than 20%
     ef.add_constraint(lambda w: w <= 0.20)
+
+    # ➔ Small caps should be at least 10% of total weight
+    if small_caps:
+        ef.add_constraint(lambda w: sum(w[i] for i, ticker in enumerate(ef.tickers) if ticker in small_caps) >= 0.10)
+
+    # ➔ Large caps should be at least 10% of total weight
+    if large_caps:
+        ef.add_constraint(lambda w: sum(w[i] for i, ticker in enumerate(ef.tickers) if ticker in large_caps) >= 0.10)
+
+    # ➔ ETFs should be at least 10% of total weight
+    if etfs:
+        ef.add_constraint(lambda w: sum(w[i] for i, ticker in enumerate(ef.tickers) if ticker in etfs) >= 0.10)
+
+    # ➔ Now optimize
     weights = ef.max_sharpe()
     return ef.clean_weights()
 
