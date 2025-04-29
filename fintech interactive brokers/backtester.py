@@ -152,7 +152,6 @@ MARKET_ETFS = [
 # Combined Ticker List
 TICKERS = STOCK_TICKERS + SECTOR_ETFS + MARKET_ETFS
 
-
 # --- Configuration ---
 ASSETS = TICKERS
 START_DATE = "2019-01-01"
@@ -177,6 +176,7 @@ print(f"Loaded price data: {historical_data.shape[0]} rows, {historical_data.sha
 print("Fetching fundamental data...")
 fundamentals = {t: f for t, f in ((tk, fetch_fundamentals_yf(tk)) for tk in ASSETS) if f is not None}
 small_caps, large_caps, _ = categorize_stocks(fundamentals)
+ETF_TICKERS = SECTOR_ETFS + MARKET_ETFS
 
 # --- Helper functions ---
 def get_current_weights(holdings, prices):
@@ -187,12 +187,14 @@ def get_current_weights(holdings, prices):
     return weights, total_val
 
 
-def check_constraints(weights, small_caps, large_caps):
+def check_constraints(weights, small_caps, large_caps, etfs):
     if any(w > 0.20 for w in weights.values()):
         return True
-    if small_caps and sum(weights.get(t,0) for t in small_caps) < 0.10:
+    if small_caps and sum(weights.get(t, 0) for t in small_caps) < 0.10:
         return True
-    if large_caps and sum(weights.get(t,0) for t in large_caps) < 0.10:
+    if large_caps and sum(weights.get(t, 0) for t in large_caps) < 0.10:
+        return True
+    if etfs and sum(weights.get(t, 0) for t in etfs) < 0.10:
         return True
     return False
 
@@ -238,7 +240,7 @@ records = []
 for date, row in historical_data.iterrows():
     prices = row.to_dict()
     weights, port_value = get_current_weights(holdings, prices)
-    if check_constraints(weights, small_caps, large_caps):
+    if check_constraints(weights, small_caps, large_caps, ETF_TICKERS):
         print(f"[REBALANCE] at {date.date()}")
         w_new, h_new = rebalance(date, historical_data, fundamentals, prices, port_value)
         if h_new:
